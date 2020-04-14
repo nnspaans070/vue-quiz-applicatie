@@ -1,10 +1,47 @@
 <template>
-    <div  class="nos"><slot></slot></div>
+    <div @click="setHuidigePlek(getHuidigePlek)" v-bind:class="{gemaakt:isGemaakt, active:isActive}" class="nos"><slot></slot></div>
 </template>
 
 <script>
     export default {
-        name: "VraagNummer",
+        props: {
+            vraag: {
+                type: Object,
+                required: true
+            },
+            huidigePlek: {
+                type: Number,
+                required: true
+            }
+        },
+        computed: {
+            isGemaakt: function () {
+                if (this.vraag.isGemaakt()) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            },
+            isActive: function () {
+                if (this.huidigePlek+1 ===this.vraag.getVraagNummer())
+                {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        },
+        methods: {
+            setHuidigePlek(huidigePlek)
+            {
+                this.$parent.$parent.setHuidigePlek(huidigePlek);
+            }
+        },
+        getHuidigePlek:function () {
+            return this.vraag.getVraagNummer()-1;
+        }
     }
 </script>
 
@@ -20,6 +57,12 @@
         font-weight: bolder;
         font-size: 22px;
         border: 1.5px solid lightskyblue;
+    }
+
+    .nos:hover
+    {
+        cursor: pointer;
+        background-color: #55dd55;
     }
 
     .gemaakt{

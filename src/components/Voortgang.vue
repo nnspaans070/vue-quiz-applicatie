@@ -1,19 +1,8 @@
 <template>
 
     <div id="voortgang">
-        <VraagNummer>1</VraagNummer>
-        <VraagNummer>2</VraagNummer>
-        <VraagNummer>3</VraagNummer>
-        <VraagNummer>4</VraagNummer>
-        <VraagNummer>5</VraagNummer>
-        <VraagNummer>6</VraagNummer>
-        <VraagNummer>7</VraagNummer>
-        <VraagNummer>8</VraagNummer>
-        <VraagNummer>9</VraagNummer>
-        <VraagNummer>10</VraagNummer>
+        <VraagNummer v-for="(vraag, index) in vragen" :key="vraag.id" :vraag="vraag" :huidigePlek="huidigePlek">{{ index }}</VraagNummer>
     </div>
-
-
 </template>
 
 <script>
@@ -21,6 +10,16 @@
     import VraagNummer from "./VraagNummer";
 
     export default {
+        props: {
+            vragen: {
+                type: Array,
+                required: true
+            },
+            huidigePlek: {
+                type: Number,
+                required: true
+            }
+        },
         name: "Voortgang",
         components: {VraagNummer},
     }

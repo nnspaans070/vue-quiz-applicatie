@@ -1,12 +1,13 @@
 <template>
   <div class="quiz">
     <Header />
-    <Voortgang />
+    <Voortgang v-if="!toonResultaten" :vragen="mijnVragen" :huidigePlek="huidigePlek" />
     <hr />
-    <VraagVeld v-bind:vraag="mijnVragen[huidigePlek]" />
-    <nav>
+    <Resultaten id="resultaat" v-on:opnieuw="opnieuw" :vragen="mijnVragen" v-if="toonResultaten" />
+    <VraagVeld v-if="!toonResultaten" v-bind:vraag="mijnVragen[huidigePlek]" />
+    <nav v-if="!toonResultaten">
     <button id="vorige" v-on:click="vorigeVraag" v-if="isVorigeActive" class="navigatie">Vorige Vraag</button>
-      <button id="inleveren" v-if="isInleveren" class="navigatie">
+      <button id="inleveren" v-if="isInleveren" @click="inleveren" class="navigatie">
         Inleveren
       </button>
     <button id="volgende" v-on:click="volgendeVraag" v-if="isVolgendeActive" class="navigatie">Volgende Vraag</button>
@@ -45,8 +46,9 @@
   import Footer from "./components/Footer";
   import Vraag from "./data/Vraag";
   import vragen from "./data/vragen";
+  import Resultaten from "./components/Resultaten";
   export default {
-    components: {Footer, VraagVeld, Voortgang, Header},
+    components: {Resultaten, Footer, VraagVeld, Voortgang, Header},
     data() {
       return {
         vragen: vragen,
@@ -74,6 +76,10 @@
       isVorigeActive: function () {
         return this.huidigePlek > 0;
       },
+      inleveren: function () {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return this.toonResultaten = true;
+      }
     },
     methods: {
       volgendeVraag: function () {
@@ -82,6 +88,15 @@
       vorigeVraag: function () {
         this.huidigePlek--;
       },
-    }
+      opnieuw: function () {
+        this.toonResultaten = false;
+        this.mijnVragen = [];
+        let vraagNummer = 1;
+        this.vragen.forEach(
+                vraag => this.mijnVragen.push(new Vraag(vraagNummer++, vraag))
+        );
+        this.huidigePlek = 0;
+      },
+    },
   }
 </script>
